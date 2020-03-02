@@ -1,0 +1,20 @@
+#logging.level.root=debug
+server.port=6900
+spring.application.name=hello-service
+
+spring.security.basic.enabled=true
+spring.security.user.name=admin
+spring.security.user.password=admin
+eureka.client.serviceUrl.defaultZone: http://${spring.security.user.name}:${spring.security.user.password}@localhost:9999/eureka/
+
+spring.cloud.config.discovery.enabled=true
+spring.cloud.config.discovery.serviceId=base-config
+spring.cloud.config.profile=prd
+spring.cloud.config.label=master
+spring.cloud.config.username=admin
+spring.clouid.config.password=pwd123
+
+spring.rabbitmq.host=localhost
+spring.rabbitmq.port=5672
+spring.rabbitmq.username=springcloud
+spring.rabbitmq.password=springcloud

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>lisr.kis</groupId>
+		<artifactId>microservice-base</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<groupId>lisr.kis</groupId>
+	<artifactId>base-eureka</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>base-eureka</name>
+	<url>http://maven.apache.org</url>
+	<properties>
+		<mainclass.name>lisr.kis.base.eureka.EurekaApp</mainclass.name>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+	</dependencies>
+</project>

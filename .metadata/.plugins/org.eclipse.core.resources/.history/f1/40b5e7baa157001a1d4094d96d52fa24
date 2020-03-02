@@ -1,0 +1,5 @@
+package lisr.kis.base.zuul.commons;
+
+public class GsonUtils {
+
+}

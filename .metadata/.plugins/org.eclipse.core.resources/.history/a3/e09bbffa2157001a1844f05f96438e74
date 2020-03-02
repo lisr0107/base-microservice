@@ -1,0 +1,97 @@
+package lisr.kis.base.zuul.fallback;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.cloud.netflix.zuul.filters.route.FallbackProvider;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.stereotype.Component;
+
+/**
+ * 路由微服务失败时fallback处理
+ * @author Admin
+ *
+ */
+@Component
+public class CustomerFallback implements FallbackProvider {
+
+	private static String MICRO_SERVICE = "microservice-customer-web";
+	/**
+	 * 指定熔断功能应用哪些路由的服务
+	 */
+	@Override
+	public String getRoute() {
+		// TODO Auto-generated method stub
+		return MICRO_SERVICE;
+	}
+
+	/**
+	 * 熔断处理逻辑
+	 */
+	@Override
+	public ClientHttpResponse fallbackResponse(String route, Throwable cause) {
+		// TODO Auto-generated method stub
+		return new ClientHttpResponse(){
+
+			@Override
+			public InputStream getBody() throws IOException {
+				// TODO Auto-generated method stub
+				JSONObject r = new JSONObject();
+				try {
+					r.put("error_code", "9999");
+					r.put("error_msg", String.format("微服务{%s}不可用:%s", MICRO_SERVICE,cause.getMessage()));
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				return new ByteArrayInputStream(r.toString().getBytes("UTF-8"));
+			}
+
+			@Override
+			public HttpHeaders getHeaders() {
+				// TODO Auto-generated method stub
+				HttpHeaders headers = new HttpHeaders();
+				//和body中的内容编码一致，否则容易乱码
+		        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+		        return headers;
+			}
+
+			/**
+			 * fallback返回码
+			 */
+			@Override
+			public HttpStatus getStatusCode() throws IOException {
+				// TODO Auto-generated method stub
+				return HttpStatus.OK;
+			}
+
+			/**
+			 * 
+			 */
+			@Override
+			public int getRawStatusCode() throws IOException {
+				// TODO Auto-generated method stub
+				return this.getStatusCode().value();
+			}
+
+			@Override
+			public String getStatusText() throws IOException {
+				// TODO Auto-generated method stub
+				return this.getStatusCode().getReasonPhrase();
+			}
+
+			@Override
+			public void close() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		};
+	}
+
+}

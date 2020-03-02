@@ -1,0 +1,17 @@
+package lisr.kis.base.config;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.cloud.client.SpringCloudApplication;
+
+/**
+ * Hello world!
+ *
+ */
+@SpringCloudApplication
+public class ConfigApp 
+{
+    public static void main( String[] args )
+    {
+        SpringApplication.run(ConfigApp.class, args);
+    }
+}

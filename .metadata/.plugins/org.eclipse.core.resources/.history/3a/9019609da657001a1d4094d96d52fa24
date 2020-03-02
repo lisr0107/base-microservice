@@ -1,0 +1,63 @@
+server:
+  port: 9001
+
+eureka:
+  instance:
+    hostname: localhost  #服务注册中心实例的主机名，可用ip地址代替
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${spring.application.instance_id:${server.port}} #用“服务名:ip:port”格式定义控制台显示的服务注册信息
+    #prefer-ip-address: true #以IP地址注册到服务中心，相互注册使用IP地址，在高可用下使用
+  
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://admin:admin@localhost:9999/eureka/
+
+spring:
+  application:
+    name: base-zuul
+
+error:
+  path: /error
+
+zuul:
+  debug:
+    request: true
+  includeDebugHeader: true
+  ignoredServices: '*' #禁止对所有的微服务进行路由，由routes指定路由规则，默认情况会对 Eureka上的所有微服务建立路由
+  prefix: /api #路由前缀  定义路由前缀，路由规则不能以/api开头
+  retryable: true #开启重试
+  sensitive-headers:  #敏感头信息，默认为Cookie、Set-Cookie、Authorization，zull会过滤掉敏感头信息，此处设置则禁止过滤掉敏感头信息
+  addHostHeader: true #解决重定向问题，在进行路由转发前为请求设置Host头信息，以标识最初的服务端请求地址(zuul地址和端口)，否则host为微服务的地址和端口
+  routes:  #按照定义顺序  prefix: /api #路由前缀路由
+    hello-service: /hello/**  #面向服务的路由
+    #api-hello:  #传统方式路由，指定path和url
+    #  path: /api/hello/** 
+    #  url: http://localhost:6900 
+    
+ribbon: #ribbonTimeout计算公式(ribbonReadTimeout + ribbonConnectTimeout)	* (maxAutoRetries + 1) * (maxAutoRetriesNextServer + 1);
+  readTimeout: 2000 # 请求处理超时时间，路由转发超时配置zuul的默认路由转发超时时间只有2s，因为它内部使用ribbon作负载均衡处理，所以我们需要配置ribbon的超时时间：
+  connectTimeout: 2000 #请求连接超时时间
+  maxAutoRetries: 1 # 对当前实例重试次数
+  maxAutoRetriesNextServer: 1 #切换实例最大重试次数
+  okToRetryOnAllOperations: true #对所有的操作进行重试
+  
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 20000  #不要将Hystrix默认的超时时间设置的比Ribbon的超时时间短ribbonTimeout
+management: #actuator配置相关
+  endpoints:
+    web:  #通过http暴露actuator endpoints
+      exposure:
+        include: '*'  # 包括所有
+        exclude:      # 除之外
+  endpoint:  # 单独设置endpoint
+    health:
+      show-details: always
+      enabled: true
+    shutdown:
+      enabled: false #关闭shutdown端点

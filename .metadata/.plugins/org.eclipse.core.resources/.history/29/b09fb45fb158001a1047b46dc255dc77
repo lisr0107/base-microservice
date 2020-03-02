@@ -1,0 +1,32 @@
+server:
+   port: 9002
+
+eureka:
+   instance:
+      hostname: localhost  #服务注册中心实例的主机名，可用ip地址代替
+      instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${spring.application.instance_id:${server.port}} #用“服务名:ip:port”格式定义控制台显示的服务注册信息
+      #prefer-ip-address: true #以IP地址注册到服务中心，相互注册使用IP地址，在高可用下使用
+  
+   client:
+      register-with-eureka: true
+      fetch-registry: true
+      service-url:
+         defaultZone: http://admin:admin@localhost:9999/eureka/
+ 
+spring:
+   application:
+      name: base-config
+   security:
+      basic:
+         enabled: true
+      user:
+         name: admin
+         password: admin123  6
+   cloud:
+      config:
+         server:
+            git:
+               uri: http://admin@localhost:6700/r/spring-repo.git
+               username: admin
+               password: admin
+               basedir: e:/baserepository  #Spring Cloud Config的本地仓库目

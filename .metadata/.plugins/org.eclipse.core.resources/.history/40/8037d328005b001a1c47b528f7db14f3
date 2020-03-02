@@ -1,0 +1,34 @@
+server:
+  port: 6900
+
+eureka:
+  instance:
+    hostname: localhost  #服务注册中心实例的主机名，可用ip地址代替
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${spring.application.instance_id:${server.port}} #用“服务名:ip:port”格式定义控制台显示的服务注册信息
+    #prefer-ip-address: true #以IP地址注册到服务中心，相互注册使用IP地址，在高可用下使用
+  
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://admin:admin@localhost:9999/eureka/
+
+spring:
+  application:
+    name: hello-service
+  zipkin:
+    enabled: true
+    base-url: http://localhost:9412
+    sender:
+      type: rabbit # 指定消息发送方式，web、rabbit、kafka
+  sleuth:
+    sampler:
+      probability: 1
+management:
+   endpoints:
+      web:
+         exposure:
+           include: "*"
+   endpoint:
+      health:
+         show-details: always

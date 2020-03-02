@@ -1,0 +1,43 @@
+server:
+  port: 9999
+  
+spring:
+    application:
+       name: EurekaServer
+    security:
+       basic:
+          enabled: true
+       user:
+          name: admin
+          password: admin
+
+management: #actuator配置相关
+  endpoints:
+    web:  #通过http暴露actuator endpoints
+      exposure:
+        include: '*'  # 包括所有
+        exclude:      # 除之外
+  endpoint:  # 单独设置endpoint
+    health:
+      show-details: always
+      enabled: true
+    shutdown:
+      enabled: false #关闭shutdown端点
+      
+info:  #定义可以在actuator的info端点中显示的信息
+  contract:
+    qq: '46781506'
+    mail: '46781506@qq.com'
+eureka:
+    instance:
+        hostname: localhost  #服务注册中心实例的主机名，可用ip地址代替
+        instance-id: ${spring.application.name}:${spring.cloud.client.ipAddress}:${spring.application.instance_id:${server.port}} #用“服务名:ip:port”格式定义控制台显示的服务注册信息
+        #  prefer-ip-address: true #以IP地址注册到服务中心，相互注册使用IP地址，在高可用下使用
+    server:
+        # 关闭自我保护，在调试期间关闭，生成环境设置为true
+        enable-self-preservation: false
+        # 清理服务器
+        eviction-interval-timer-in-ms: 5000
+    client:
+        register-with-eureka: false # 实例是否在eureka服务器上注册自己的信息以供其他服务发现，默认为true，高可用设置为true
+        fetch-registry: false   # 此客户端是否获取eureka服务器注册表上的注册信息，默认为true 集群中从相邻的eureka server拉取注册表

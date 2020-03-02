@@ -1,0 +1,37 @@
+package lisr.kis.Hello.controller;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.stereotype.Component;
+
+@RefreshScope
+@Component
+public class GitConfigLisr {
+	@Value("${lisr.name:none}")
+	private String name;
+	@Value("${lisr.age:18}")
+	private int age;
+	@Value("${lisr.gender:boy")
+	private String gender;
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+	
+	
+}

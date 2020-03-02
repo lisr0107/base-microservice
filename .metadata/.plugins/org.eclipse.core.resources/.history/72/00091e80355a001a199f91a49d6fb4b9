@@ -1,0 +1,20 @@
+package lisr.kis.base.zipkin;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import zipkin2.server.internal.EnableZipkinServer;
+/**
+ * Hello world!
+ *
+ */
+@SpringBootApplication
+@EnableDiscoveryClient
+@EnableZipkinServer
+public class ZipkinApplication 
+{
+    public static void main( String[] args )
+    {
+        SpringApplication.run(public.class, args);
+    }
+}

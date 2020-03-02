@@ -1,0 +1,48 @@
+server:
+  port: 9412
+  
+spring:
+  application:
+    name: base-zipkin
+  #解决The bean 'characterEncodingFilter', defined in class path resource [zipkin/autoconfigure/ui/ZipkinUiAutoConfiguration.class], could not be registered. A bean with that name has already been defined in class path resource [org/springframework/boot/autoconfigure/web/servlet/HttpEncodingAutoConfiguration.class] and overriding is disabled.Action:
+  main:
+    allow-bean-definition-overriding: true
+  sleuth:   
+    enabled: false #表示当前程序不使用sleuth    
+  datasource: #配置msyql 连接  
+    url: jdbc:mysql://localhost:3306/zipkin?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false    
+    username: root  
+    password: root  
+    driver-class-name: com.mysql.jdbc.Driver   
+    initialize: true  
+    continue-on-error: true  
+
+  
+eureka:
+  instance:
+    hostname: localhost  #服务注册中心实例的主机名，可用ip地址代替
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${spring.application.instance_id:${server.port}} #用“服务名:ip:port”格式定义控制台显示的服务注册信息
+
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://admin:admin@localhost:9999/eureka/
+zipkin:   
+  storage:   
+    type: mysql #mysql存储zipkin追踪信息  
+  ui: #配置ui界面  zipkin2.autoconfigure.ui.ZipkinUiProperties.java
+    suggestLens: false      
+#去除控制台异常
+management:
+  metrics:
+    web:
+      server:
+        auto-time-requests: false
+  endpoints:
+    web:
+      exposure:
+        include: "*" #暴露所有endpoints ，默认是info、health
+  endpoint:
+    health:
+       show-details: always

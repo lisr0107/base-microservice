@@ -1,0 +1,28 @@
+server:
+  port: 9802
+  
+spring:
+  application:
+    name: base-zipkin
+  #解决The bean 'characterEncodingFilter', defined in class path resource [zipkin/autoconfigure/ui/ZipkinUiAutoConfiguration.class], could not be registered. A bean with that name has already been defined in class path resource [org/springframework/boot/autoconfigure/web/servlet/HttpEncodingAutoConfiguration.class] and overriding is disabled.Action:
+  main:
+    allow-bean-definition-overriding: true
+eureka:
+  instance:
+    hostname: localhost  #服务注册中心实例的主机名，可用ip地址代替
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${spring.application.instance_id:${server.port}} #用“服务名:ip:port”格式定义控制台显示的服务注册信息
+
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://admin:admin@localhost:9999/eureka/
+      
+management:
+   endpoints:
+      web:
+         exposure:
+           include: "*" #暴露所有endpoints ，默认是info、health
+   endpoint:
+      health:
+         show-details: always

@@ -1,0 +1,66 @@
+package lisr.kis.base.config;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+@EnableWebSecurity
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+	
+	@Value("${spring.security.user.name}")
+	private String userName;
+	@Value("${spring.security.user.password}")
+	private String password;
+	
+	@Override
+    protected void configure(HttpSecurity http) throws Exception {
+		// 在/eureka/**端点忽略csrf验证
+        //http.csrf().ignoringAntMatchers("/login/**");
+        // 配置使请求需要通过httpBasic或form验证
+        http.csrf().disable()
+        	.authorizeRequests()
+        	.antMatchers(
+	                "/",
+	                "/*.html",
+	                "/favicon.ico",
+	                "/**/*.html",
+	                "/**/*.css",
+	                "/**/*.js",
+	                "/csrf", //swagger会请求此地址，否则报access denied
+	                "/actuator/**" //actuator请求
+	            ).permitAll()
+           .anyRequest().authenticated()
+           .and()
+           .formLogin()
+           .and()
+           .httpBasic();
+    }
+/*	
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.inMemoryAuthentication()
+				.withUser(this.userName)
+				.password("{bcrypt}" +new BCryptPasswordEncoder().encode(this.password))
+				.roles("USER");
+	}
+*/
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+	
+}

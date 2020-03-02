@@ -1,0 +1,24 @@
+server:
+  port: 9802
+  
+spring:
+  application:
+    name: base-zipkin
+
+eureka:
+  instance:
+    hostname: localhost  #服务注册中心实例的主机名，可用ip地址代替
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${spring.application.instance_id:${server.port}} #用“服务名:ip:port”格式定义控制台显示的服务注册信息
+
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://admin:admin@localhost:9999/eureka/
+
+turbine:
+  appConfig: ms-test  #需要监控的微服务名
+  aggregator:
+    clusterConfig: default
+  clusterNameExpression: new String("default")  #集群名称为default
+  combineHostPort: true #通过主机名和端口号区分服务，默认情况下以host区分服务

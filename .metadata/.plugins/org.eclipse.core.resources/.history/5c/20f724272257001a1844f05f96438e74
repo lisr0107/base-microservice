@@ -1,0 +1,42 @@
+package lisr.kis.base.zuul.fallback;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.springframework.cloud.netflix.zuul.filters.route.FallbackProvider;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.stereotype.Component;
+
+/**
+ * 路由微服务失败时fallback处理
+ * 
+ * @author Admin
+ *
+ */
+@Component
+public class CustomerFallback implements FallbackProvider {
+
+	@Override
+	public String getRoute() {
+		// 表明是为哪个微服务提供回退，*表示为所有微服务提供回退
+		return "*";
+	}
+
+	@Override
+	public ClientHttpResponse fallbackResponse(String route, Throwable cause) {
+		// TODO Auto-generated method stub
+		if (cause instanceof HystrixTimeoutException) {
+	           return response(HttpStatus.GATEWAY_TIMEOUT);
+	       } else {
+	           return this.fallbackResponse();
+	       }
+	————————————————
+	版权声明：本文为CSDN博主「StarskyBoy」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。
+	原文链接：https://blog.csdn.net/StarskyBoy/article/details/85012485
+	}
+
+}

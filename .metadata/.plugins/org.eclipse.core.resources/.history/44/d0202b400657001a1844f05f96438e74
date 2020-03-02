@@ -1,0 +1,5 @@
+package lisr.kis.base.zuul;
+
+public class ErrorController {
+
+}

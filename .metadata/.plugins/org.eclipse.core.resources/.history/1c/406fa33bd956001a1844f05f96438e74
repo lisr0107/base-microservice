@@ -1,0 +1,28 @@
+server:
+  port: 9001
+
+eureka:
+  instance:
+    hostname: localhost  #服务注册中心实例的主机名，可用ip地址代替
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${spring.application.instance_id:${server.port}} #用“服务名:ip:port”格式定义控制台显示的服务注册信息
+    #prefer-ip-address: true #以IP地址注册到服务中心，相互注册使用IP地址，在高可用下使用
+  
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://admin:admin@localhost:9999/eureka/
+
+spring:
+  application:
+    name: base-zuul
+    
+zuul:
+  ignoredServices: '*' #禁止对所有的微服务进行路由，由routes指定路由规则，默认情况会对 Eureka上的所有微服务建立路由
+  prefix: /api #路由前缀  定义路由前缀，路由规则不能以/api开头
+  routes:  #按照定义顺序  prefix: /api #路由前缀路由
+    #api-hello:  #传统方式路由，指定path和url
+    #  path: /api/hello/** 
+    #  url: http://localhost:6900 
+    hello-service: /hello/**  #面向服务的路由
+
